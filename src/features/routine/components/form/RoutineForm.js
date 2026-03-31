@@ -68,13 +68,13 @@ export default function RoutineForm({
           </div>
         )}
 
-        <TitleSectionCard />
-        <JobSectionCard />
-        <DurationAndImportanceSection />
-        <RepeatDaysCard />
-        <InterestSectionCard />
-        {!isReadOnly && <ShareSettingsCard />}
-        <ActivitiesSectionCard />
+        {TitleSectionCard}
+        {JobSectionCard}
+        {DurationAndImportanceSection}
+        {RepeatDaysCard}
+        {InterestSectionCard}
+        {!isReadOnly && ShareSettingsCard}
+        {ActivitiesSectionCard}
 
         {!isReadOnly && (
           <div className="flex gap-3">
