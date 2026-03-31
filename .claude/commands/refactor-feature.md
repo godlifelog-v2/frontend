@@ -49,7 +49,17 @@ import 경로를 새 `features/{domain}` 모듈로 변경한다.
 - [ ] 인증이 필요한 페이지에 AuthContext 연동 여부
 - [ ] 레거시 파일 import가 남아있지 않은가
 
-### 6단계: 레거시 정리
+### 6단계: ESLint 검증
+리팩토링한 파일들을 대상으로 ESLint를 실행하여 코드 품질을 확인한다.
+
+```bash
+npx eslint src/features/{domain}/ --ext .js,.jsx
+```
+
+- 오류(error)가 있으면 수정 후 다시 검증한다.
+- 경고(warning)는 내용을 사용자에게 보고한다.
+
+### 7단계: 레거시 정리
 리팩토링 완료 후 레거시 파일 삭제 여부를 사용자에게 확인한다.
 삭제 대상:
 - `src/pages/{Domain}/`
