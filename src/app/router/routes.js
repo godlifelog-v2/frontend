@@ -5,10 +5,10 @@ import { CHALLENGE_ROUTES } from "./featureRouters/challengeRoutes";
 import { FAQ_ROUTES } from "./featureRouters/faqRoutes";
 import { NOTICE_ROUTES } from "./featureRouters/noticeRoutes";
 import { ADMIN_ROUTES } from "./featureRouters/adminRoutes";
-
-// import Notice, FAQ, Challenge 등 다른 그룹도 추가 가능
+import { HOME_ROUTES } from "./featureRouters/homeRoutes";
 
 export const ALL_ROUTES = [
+  ...HOME_ROUTES,
   ...QNA_ROUTES,
   ...ROUTINE_ROUTES,
   ...USER_ROUTES,
