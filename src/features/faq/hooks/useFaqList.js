@@ -95,15 +95,19 @@ export const useFaqList = () => {
 
   const filtered = useMemo(() => {
     if (!Array.isArray(faqData)) return [];
+    const selectedLabel =
+      category === "all"
+        ? null
+        : categories.find((c) => c.key === category)?.label;
     return faqData.filter((item) => {
       const matchesCategory =
-        category === "all" || item.faqCategoryIdx?.toString() === category;
+        category === "all" || item.faqCategoryName === selectedLabel;
       const matchesSearch = item.faqTitle
         ?.toLowerCase()
         .includes(search.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [faqData, category, search]);
+  }, [faqData, category, search, categories]);
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paginated = useMemo(
