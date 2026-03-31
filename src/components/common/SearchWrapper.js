@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, ChevronDown, X } from "lucide-react";
+import { Filter, ChevronDown, X } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
 import { Separator } from "@/shared/components/ui/separator";
 import SearchBar from "@/components/common/SearchBar/SearchBar";
@@ -49,12 +49,12 @@ const SearchWrapper = ({
 
           // 각 항목에 targetIdx가 있는지 확인
           const hasCorrectFormat = parsedTargets.every(
-            (item) => item.targetIdx !== undefined
+            (item) => item.idx !== undefined
           );
           if (!hasCorrectFormat) {
             console.error(
-              "일부 목표 카테고리에 targetIdx가 없습니다:",
-              parsedTargets.filter((item) => item.targetIdx === undefined)
+              "일부 목표 카테고리에 idx가 없습니다:",
+              parsedTargets.filter((item) => item.idx === undefined)
             );
           }
 

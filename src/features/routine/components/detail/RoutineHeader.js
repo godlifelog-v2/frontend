@@ -1,0 +1,43 @@
+import React from "react";
+import { Calendar, Lock, GitFork } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import FlameIndicator from "../FlameIndicator";
+
+const RoutineHeader = ({ routineData, getStatusBadgeStyle, getStatusText }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="relative">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 pb-16 text-white">
+        <div className="absolute top-4 right-4 flex items-center space-x-2">
+          <FlameIndicator certExp={routineData.certExp || 0} />
+          {!routineData.isShared && (
+            <span className="px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-white flex items-center gap-1">
+              <Lock className="w-3 h-3" /> 비공개
+            </span>
+          )}
+          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeStyle()}`}>{getStatusText()}</span>
+        </div>
+
+        <h1 className="text-3xl font-bold mb-2">{routineData.planTitle}</h1>
+
+        {routineData.forkIdx && (
+          <button onClick={() => navigate(`/routine/detail/${routineData.forkIdx}`)} className="flex items-center text-blue-100 mb-1">
+            <GitFork className="w-4 h-4 mr-1" />
+            <span className="font-medium text-blue-100 text-sm">
+              <span>{routineData.forkTitle}</span>
+              <span> 에서 포크됨</span>
+            </span>
+          </button>
+        )}
+
+        <div className="flex items-center text-blue-100 mb-6">
+          <Calendar className="w-4 h-4 mr-1" />
+          <span className="text-sm">{new Date(routineData.planSubDate).toLocaleDateString()}에 생성됨</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RoutineHeader;
