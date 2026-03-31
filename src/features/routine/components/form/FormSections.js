@@ -31,7 +31,7 @@ export default function useFormSections({
     }
   }, [form]);
 
-  const TitleSectionCard = useMemo(() => () => {
+  const TitleSectionCard = useMemo(() => {
     if (isReadOnly) return null;
     return (
       <Card className="bg-white">
@@ -46,7 +46,7 @@ export default function useFormSections({
     );
   }, [form.control, isReadOnly]);
 
-  const JobSectionCard = useMemo(() => () => (
+  const JobSectionCard = useMemo(() => (
     <Card className="bg-white">
       <CardHeader>
         <CardTitle>추천 직업</CardTitle>
@@ -72,7 +72,7 @@ export default function useFormSections({
     </Card>
   ), [form.control, isReadOnly, jobs, jobIcons, isLoading, handleJobChange, handleCustomJobSelected]);
 
-  const DurationAndImportanceSection = useMemo(() => () => (
+  const DurationAndImportanceSection = useMemo(() => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Card className="bg-white">
         <CardHeader>
@@ -95,7 +95,7 @@ export default function useFormSections({
     </div>
   ), [form.control, isReadOnly]);
 
-  const RepeatDaysCard = useMemo(() => () => (
+  const RepeatDaysCard = useMemo(() => (
     <Card className="bg-white">
       <CardHeader>
         <CardTitle>반복 요일</CardTitle>
@@ -107,7 +107,7 @@ export default function useFormSections({
     </Card>
   ), [form.control, isReadOnly]);
 
-  const InterestSectionCard = useMemo(() => () => (
+  const InterestSectionCard = useMemo(() => (
     <Card className="bg-white">
       <CardHeader>
         <CardTitle>추천 관심사{!isReadOnly && <span className="text-red-500 ml-1">*</span>}</CardTitle>
@@ -133,7 +133,7 @@ export default function useFormSections({
     </Card>
   ), [form.control, isReadOnly, targets, jobIcons, isLoading]);
 
-  const ShareSettingsCard = useMemo(() => () => (
+  const ShareSettingsCard = useMemo(() => (
     <Card className="bg-white">
       <CardHeader>
         <CardTitle>공유설정</CardTitle>
@@ -145,7 +145,7 @@ export default function useFormSections({
     </Card>
   ), [form.control]);
 
-  const ActivitiesSectionCard = useMemo(() => () => (
+  const ActivitiesSectionCard = useMemo(() => (
     <Card className="bg-white">
       <CardHeader>
         <CardTitle>활동 목록{!isReadOnly && <span className="text-red-500 ml-1">*</span>}</CardTitle>
