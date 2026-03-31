@@ -1,13 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useToast } from "@/shared/components/ui/use-toast";
 import { useCategories } from "@/shared/hooks/categories/useCategories";
-import { useFaqService } from "../services/faqService";
+import { getFaqList, getFaqDetail, deleteFaq } from "../services/faqService";
 
 const PER_PAGE = 4;
 
 export const useFaqList = () => {
   const { toast } = useToast();
-  const { getFaqList, getFaqDetail, deleteFaq } = useFaqService();
   const { categories: rawCategories, loading: categoryLoading } = useCategories("faq");
 
   const [faqData, setFaqData] = useState([]);
