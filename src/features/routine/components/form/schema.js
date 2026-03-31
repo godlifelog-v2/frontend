@@ -24,7 +24,7 @@ export const formSchema = z.object({
   activities: z
     .array(
       z.object({
-        activityIdx: z.number().optional(),
+        activityIdx: z.number().nullable().optional(),
         activityName: z.string().min(1, "활동 이름을 입력해주세요"),
         setTime: z.string(),
         description: z.string().nullable().optional(),

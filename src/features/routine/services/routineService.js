@@ -48,8 +48,8 @@ export const toggleRoutineActive = async (data) => {
   return response.data;
 };
 
-export const completeRoutineEarly = async (data) => {
-  const response = await axiosInstance.patch("/plan/auth/earlyComplete", data);
+export const completeRoutineEarly = async (planIdx) => {
+  const response = await axiosInstance.patch(`/plan/auth/earlyComplete/${planIdx}`);
   return response.data;
 };
 
