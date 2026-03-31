@@ -138,7 +138,7 @@ export const useRoutineDetail = (planIdx, navigate) => {
       if (action === "start") {
         response = await toggleRoutineActive({ planIdx: parseInt(planIdx), userIdx, isActive: 1 });
       } else {
-        response = await completeRoutineEarly({ planIdx: parseInt(planIdx), userIdx, isDeleted: 0, isCompleted: 1 });
+        response = await completeRoutineEarly(parseInt(planIdx));
       }
 
       if (response.success) {
