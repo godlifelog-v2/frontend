@@ -43,7 +43,7 @@ export const useFaqList = () => {
     } finally {
       setLoading(false);
     }
-  }, [getFaqList]);
+  }, []);
 
   useEffect(() => {
     fetchFaqList();
@@ -65,7 +65,7 @@ export const useFaqList = () => {
     } finally {
       setDetailLoading(false);
     }
-  }, [openId, faqDetails, getFaqDetail]);
+  }, [openId, faqDetails]);
 
   const handleCategoryChange = useCallback((key) => {
     setCategory(key);
@@ -91,7 +91,7 @@ export const useFaqList = () => {
         description: "FAQ 삭제에 실패했습니다. 다시 시도해주세요.",
       });
     }
-  }, [deleteFaq, openId, toast]);
+  }, [openId, toast]);
 
   const filtered = useMemo(() => {
     if (!Array.isArray(faqData)) return [];
