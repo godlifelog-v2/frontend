@@ -71,8 +71,8 @@ export const useMyAccount = () => {
         userJoin: apiData.userJoin || prevData.userJoin,
         userPhone: apiData.userPhone || prevData.userPhone,
         userGender: getGenderText(apiData.userGender),
-        userJob: apiData.jobInfos?.name || "정보 없음",
-        targetIdx: apiData.targetInfos?.name || "정보 없음",
+        userJob: apiData.jobInfos?.idx?.toString() || "",
+        targetIdx: apiData.targetInfos?.idx?.toString() || "",
         maxExp: apiData.maxExp || prevData.maxExp,
       }));
 
