@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   User,
   Mail,
@@ -26,6 +27,9 @@ import {
 import { useMyProfile } from "../hooks/useMyProfile";
 
 export default function MyProfileForm({ userData, setUserData }) {
+  const phoneMidRef = useRef(null);
+  const phoneLastRef = useRef(null);
+
   const {
     jobCategories,
     targetCategories,
@@ -54,6 +58,13 @@ export default function MyProfileForm({ userData, setUserData }) {
     setTempPersonalData,
     isUpdatingPersonal,
     handlePersonalSave,
+    handleOpenPersonalModal,
+    phonePrefix,
+    setPhonePrefix,
+    phoneMid,
+    handlePhoneMidChange,
+    phoneLast,
+    handlePhoneLastChange,
     showCareerModal,
     setShowCareerModal,
     tempCareerData,
@@ -150,13 +161,7 @@ export default function MyProfileForm({ userData, setUserData }) {
                 >
                   <AlertDialogTrigger asChild>
                     <button
-                      onClick={() =>
-                        setTempPersonalData({
-                          userName: userData.userName,
-                          userGender: userData.userGender,
-                          userPhone: userData.userPhone,
-                        })
-                      }
+                      onClick={handleOpenPersonalModal}
                       className="text-indigo-500 hover:text-indigo-700 flex items-center"
                     >
                       <Edit size={16} className="mr-1" />
@@ -206,17 +211,65 @@ export default function MyProfileForm({ userData, setUserData }) {
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium">전화번호</label>
-                        <Input
-                          type="tel"
-                          value={tempPersonalData.userPhone}
-                          onChange={(e) =>
-                            setTempPersonalData({
-                              ...tempPersonalData,
-                              userPhone: e.target.value,
-                            })
-                          }
-                          className="w-full"
-                        />
+                        <div className="flex items-center gap-1">
+                          <select
+                            className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                            value={phonePrefix}
+                            onChange={(e) => setPhonePrefix(e.target.value)}
+                          >
+                            <option value="010">010</option>
+                            <option value="02">02</option>
+                            <option value="031">031</option>
+                            <option value="032">032</option>
+                            <option value="033">033</option>
+                            <option value="041">041</option>
+                            <option value="042">042</option>
+                            <option value="043">043</option>
+                            <option value="044">044</option>
+                            <option value="051">051</option>
+                            <option value="052">052</option>
+                            <option value="053">053</option>
+                            <option value="054">054</option>
+                            <option value="055">055</option>
+                            <option value="061">061</option>
+                            <option value="062">062</option>
+                            <option value="063">063</option>
+                            <option value="064">064</option>
+                            <option value="070">070</option>
+                          </select>
+                          <span className="text-gray-500">-</span>
+                          <Input
+                            ref={phoneMidRef}
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="0000"
+                            maxLength={4}
+                            value={phoneMid}
+                            onChange={(e) => {
+                              handlePhoneMidChange(e.target.value);
+                              if (e.target.value.replace(/\D/g, "").length === 4) {
+                                phoneLastRef.current?.focus();
+                              }
+                            }}
+                            className="w-20 text-center"
+                          />
+                          <span className="text-gray-500">-</span>
+                          <Input
+                            ref={phoneLastRef}
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="0000"
+                            maxLength={4}
+                            value={phoneLast}
+                            onChange={(e) => handlePhoneLastChange(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Backspace" && phoneLast === "") {
+                                phoneMidRef.current?.focus();
+                              }
+                            }}
+                            className="w-20 text-center"
+                          />
+                        </div>
                       </div>
                     </div>
                     <AlertDialogFooter>
