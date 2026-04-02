@@ -1,10 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   fetchMyRoutineList,
   deleteRoutines,
   toggleRoutineShared,
 } from "../services/mypageService";
 import { useSearchHistory } from "./useSearchHistory";
+
+const INITIAL_FILTERS = {
+  page: 1,
+  size: 3,
+  status: 0,
+  target: null,
+  job: null,
+  sort: "latest",
+  order: "desc",
+  search: "",
+};
 
 export const useMyRoutineList = () => {
   const [loading, setLoading] = useState(true);
@@ -14,23 +25,14 @@ export const useMyRoutineList = () => {
   const [privacyLoading, setPrivacyLoading] = useState({});
   const [selectedRoutines, setSelectedRoutines] = useState([]);
 
-  const [filters, setFilters] = useState({
-    page: 1,
-    size: 3,
-    status: 0,
-    target: null,
-    job: null,
-    sort: "latest",
-    order: "desc",
-    search: "",
-  });
+  const [filters, setFilters] = useState(INITIAL_FILTERS);
 
   const [searchInput, setSearchInput] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   const searchHistoryProps = useSearchHistory("routine");
 
-  const loadMyRoutines = async (params = filters) => {
+  const loadMyRoutines = useCallback(async (params = INITIAL_FILTERS) => {
     try {
       setLoading(true);
       const data = await fetchMyRoutineList(params);
@@ -42,7 +44,7 @@ export const useMyRoutineList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -52,7 +54,7 @@ export const useMyRoutineList = () => {
       setError("로그인이 필요합니다.");
       setLoading(false);
     }
-  }, []);
+  }, [loadMyRoutines]);
 
   const handleFilterChange = (newFilters) => {
     const updatedFilters = { ...filters, ...newFilters, page: 1 };

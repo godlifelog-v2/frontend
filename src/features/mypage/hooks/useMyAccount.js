@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/shared/components/ui/use-toast";
 import { fetchMyAccount, updateNickname } from "../services/mypageService";
@@ -29,9 +29,6 @@ export const useMyAccount = () => {
   const errorNotifiedRef = useRef(false);
   const retryCountRef = useRef(0);
 
-  const userInfoString = localStorage.getItem("userInfo");
-  const userInfo = userInfoString ? JSON.parse(userInfoString) : null;
-
   const [userData, setUserData] = useState({
     userId: "",
     userNick: "",
@@ -58,7 +55,7 @@ export const useMyAccount = () => {
   const [editing, setEditing] = useState({ userNick: false });
   const [tempData, setTempData] = useState({ ...userData });
 
-  const loadUserData = async () => {
+  const loadUserData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchMyAccount();
@@ -119,7 +116,7 @@ export const useMyAccount = () => {
 
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -132,6 +129,9 @@ export const useMyAccount = () => {
       navigate("/user/login");
       return;
     }
+
+    const userInfoString = localStorage.getItem("userInfo");
+    const userInfo = userInfoString ? JSON.parse(userInfoString) : null;
 
     if (userInfo) {
       setUserData((prevData) => ({
@@ -149,7 +149,7 @@ export const useMyAccount = () => {
 
     retryCountRef.current = 0;
     loadUserData();
-  }, []);
+  }, [loadUserData, navigate, toast]);
 
   useEffect(() => {
     const tabParam = searchParams.get("tab");
