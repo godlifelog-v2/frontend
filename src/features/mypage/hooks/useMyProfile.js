@@ -47,9 +47,13 @@ export const useMyProfile = (userData, setUserData) => {
   const [tempPersonalData, setTempPersonalData] = useState({
     userName: userData.userName || "",
     userGender: userData.userGender || "",
-    userPhone: userData.userPhone || "",
   });
   const [isUpdatingPersonal, setIsUpdatingPersonal] = useState(false);
+
+  // 전화번호 분리 상태
+  const [phonePrefix, setPhonePrefix] = useState("010");
+  const [phoneMid, setPhoneMid] = useState("");
+  const [phoneLast, setPhoneLast] = useState("");
 
   // 커리어 모달
   const [showCareerModal, setShowCareerModal] = useState(false);
@@ -248,20 +252,50 @@ export const useMyProfile = (userData, setUserData) => {
     }
   };
 
+  const handleOpenPersonalModal = () => {
+    const phone = userData.userPhone || "";
+    const parts = phone.split("-");
+    if (parts.length === 3) {
+      setPhonePrefix(parts[0] || "010");
+      setPhoneMid(parts[1].includes("*") ? "" : parts[1]);
+      setPhoneLast(parts[2].includes("*") ? "" : parts[2]);
+    } else {
+      setPhonePrefix("010");
+      setPhoneMid("");
+      setPhoneLast("");
+    }
+    setTempPersonalData({
+      userName: userData.userName,
+      userGender: userData.userGender,
+    });
+  };
+
+  const handlePhoneMidChange = (value) => {
+    const digits = value.replace(/\D/g, "").slice(0, 4);
+    setPhoneMid(digits);
+  };
+
+  const handlePhoneLastChange = (value) => {
+    const digits = value.replace(/\D/g, "").slice(0, 4);
+    setPhoneLast(digits);
+  };
+
   const handlePersonalSave = async () => {
+    const userPhone = `${phonePrefix}-${phoneMid}-${phoneLast}`;
+    const maskedPhone = `${phonePrefix}-${phoneMid[0]}${"*".repeat(phoneMid.length - 1)}-${phoneLast[0]}${"*".repeat(phoneLast.length - 1)}`;
     setIsUpdatingPersonal(true);
     try {
       await updatePersonalInfo({
         userName: tempPersonalData.userName,
         userGender: getGenderCode(tempPersonalData.userGender),
-        userPhone: tempPersonalData.userPhone,
+        userPhone,
       });
 
       setUserData({
         ...userData,
         userName: tempPersonalData.userName,
         userGender: tempPersonalData.userGender,
-        userPhone: tempPersonalData.userPhone,
+        userPhone: maskedPhone,
       });
 
       setShowPersonalModal(false);
@@ -386,6 +420,13 @@ export const useMyProfile = (userData, setUserData) => {
     setTempPersonalData,
     isUpdatingPersonal,
     handlePersonalSave,
+    handleOpenPersonalModal,
+    phonePrefix,
+    setPhonePrefix,
+    phoneMid,
+    handlePhoneMidChange,
+    phoneLast,
+    handlePhoneLastChange,
     // 커리어
     showCareerModal,
     setShowCareerModal,
