@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { useToast } from "@/shared/components/ui/use-toast";
-import { Input } from "@/shared/components/ui/input";
 import { Lock, Edit, Eye, EyeOff } from "lucide-react";
+import { Input } from "@/shared/components/ui/input";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,100 +12,29 @@ import {
   AlertDialogTrigger,
 } from "@/shared/components/ui/alert-dialog";
 import AccountDeletion from "./AccountDeletion";
-import axiosInstance from "@/shared/api/axiosInstance";
+import { usePasswordChange } from "../hooks/usePasswordChange";
 
-export default function PasswordSection() {
-  // 비밀번호 관련 상태
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
-
-  // 비밀번호 변경 대화상자 상태
-  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
-
-  const accessToken = localStorage.getItem("accessToken");
-  const { toast } = useToast();
-
-  // 비밀번호 저장 핸들러
-  const handlePasswordSave = async () => {
-    // 입력 유효성 검사
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setPasswordError("모든 필드를 입력해주세요.");
-      return;
-    }
-
-    // 비밀번호 일치 확인
-    if (newPassword !== confirmPassword) {
-      setPasswordError("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
-    setPasswordError("");
-    setIsUpdating(true);
-
-    try {
-      // 비밀번호 업데이트 요청
-      await axiosInstance.patch(
-        "/myPage/auth/security/change/password",
-        {
-          originalPw: currentPassword,
-          userPw: newPassword,
-          userPwConfirm: confirmPassword,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          timeout: 5000, // 5초 타임아웃 설정
-        }
-      );
-
-      // 성공 메시지
-      toast({
-        title: "비밀번호가 업데이트되었습니다",
-        description: "성공적으로 비밀번호가 변경되었습니다.",
-      });
-
-      // 입력 필드 초기화
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-
-      // 대화상자 닫기
-      setShowPasswordDialog(false);
-    } catch (err) {
-      console.error("비밀번호 업데이트 중 오류 발생:", err);
-
-      // 오류 메시지 처리
-      const errorMessage =
-        err.response?.data?.message ||
-        "비밀번호를 업데이트하는 데 문제가 발생했습니다.";
-
-      setPasswordError(errorMessage);
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  // 대화상자 취소 핸들러
-  const handleCancel = () => {
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setPasswordError("");
-    setShowPasswordDialog(false);
-  };
-
-  // 비밀번호 마스킹 함수
-  const maskPassword = () => {
-    return "••••••••";
-  };
+export default function SecuritySettings() {
+  const {
+    currentPassword,
+    setCurrentPassword,
+    newPassword,
+    setNewPassword,
+    confirmPassword,
+    setConfirmPassword,
+    showCurrentPassword,
+    setShowCurrentPassword,
+    showNewPassword,
+    setShowNewPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
+    passwordError,
+    isUpdating,
+    showPasswordDialog,
+    setShowPasswordDialog,
+    handlePasswordSave,
+    handleCancel,
+  } = usePasswordChange();
 
   return (
     <div className="rounded-2xl shadow-md bg-white overflow-hidden">
@@ -118,13 +45,12 @@ export default function PasswordSection() {
       <div className="p-6">
         <div className="space-y-6">
           <div>
-            {/* 비밀번호 필드 */}
-            <div className="flex items-center p-4  text-left">
+            <div className="flex items-center p-4 text-left">
               <Lock className="text-indigo-500 mr-3" size={20} />
               <div className="flex-1">
                 <div className="text-sm text-gray-500">비밀번호</div>
                 <div className="flex items-center justify-between">
-                  <span className="font-medium">{maskPassword()}</span>
+                  <span className="font-medium">••••••••</span>
                   <AlertDialog
                     open={showPasswordDialog}
                     onOpenChange={setShowPasswordDialog}
@@ -144,7 +70,6 @@ export default function PasswordSection() {
                       </AlertDialogHeader>
 
                       <div className="py-4 space-y-4">
-                        {/* 현재 비밀번호 */}
                         <div className="relative">
                           <Input
                             type={showCurrentPassword ? "text" : "password"}
@@ -168,7 +93,6 @@ export default function PasswordSection() {
                           </button>
                         </div>
 
-                        {/* 새 비밀번호 */}
                         <div className="relative">
                           <Input
                             type={showNewPassword ? "text" : "password"}
@@ -189,7 +113,6 @@ export default function PasswordSection() {
                           </button>
                         </div>
 
-                        {/* 새 비밀번호 확인 */}
                         <div className="relative">
                           <Input
                             type={showConfirmPassword ? "text" : "password"}
