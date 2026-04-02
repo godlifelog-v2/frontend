@@ -1,61 +1,67 @@
-# 커밋 메시지 추천 & 작업 내용 정리 스킬
+# Commit Message Recommendation & Work Summary Skill
 
-현재 작업한 변경 사항을 분석하여 커밋 메시지를 추천하고, 작업 내용을 마크다운으로 정리한다.
+Analyze current changes, recommend commit messages, and produce a structured markdown summary.
 
-## 실행 절차
+## Steps
 
-### 1단계: 변경 사항 수집
-다음 명령어를 병렬로 실행하여 현재 상태를 파악한다:
-- `git status` — 변경된 파일 목록 확인
-- `git diff HEAD` — staged + unstaged 변경 내용 전체 확인
-- `git log --oneline -5` — 최근 커밋 메시지 스타일 파악
+### Step 1: Collect changes
+Run the following commands in parallel:
+- `git status` — list changed files
+- `git diff HEAD` — show all staged + unstaged diffs
+- `git log --oneline -5` — identify recent commit message style
 
-### 2단계: 변경 내용 분석
-수집한 정보를 바탕으로 다음을 파악한다:
-- 어떤 파일이 변경되었는가
-- 변경의 목적은 무엇인가 (버그 수정 / 기능 추가 / 리팩토링 / 설정 변경 등)
-- 변경의 핵심 원인 또는 배경
+### Step 2: Analyze changes
+From the collected data, determine:
+- Which files changed
+- Purpose of the change (bug fix / new feature / refactor / config, etc.)
+- Root cause or background
 
-### 3단계: 커밋 메시지 추천
-최근 커밋 스타일을 참고하여 한국어 커밋 메시지를 추천한다.
+### Step 3: Recommend commit messages
+Reference recent commit style and suggest Korean commit messages.
 
-**커밋 메시지 형식:**
+**Commit message format:**
 ```
-{타입}: {변경 내용 요약}
+{Type}: {summary of change}
 ```
 
-**타입 기준:**
-| 타입 | 설명 |
-|------|------|
-| `Fix` | 버그 수정 |
-| `Feat` | 새 기능 추가 |
-| `Refactor` | 기능 변화 없는 코드 개선 |
-| `Modify` | 기존 동작 일부 변경 |
-| `Chore` | 설정, 의존성, 기타 변경 |
-| `Docs` | 문서 변경 |
+**Type reference:**
+| Type | Description |
+|------|-------------|
+| `Fix` | Bug fix |
+| `Feat` | New feature |
+| `Refactor` | Code improvement without behavior change |
+| `Modify` | Partial change to existing behavior |
+| `Chore` | Config, dependencies, misc |
+| `Docs` | Documentation change |
 
-커밋 메시지 후보를 **2~3개** 제시하고 추천 이유를 간략히 설명한다.
+Provide **2–3 candidates** with a brief reason for each.
 
-### 4단계: 작업 내용 마크다운 정리
-아래 형식으로 작업 내용을 정리하여 출력한다:
+Output example:
+```
+1. Fix: 루틴 활동명 입력 시 포커스 유실 문제 수정 ← 문제 원인을 직접 서술
+2. Fix: ActivityNameInput 리렌더링으로 인한 포커스 초기화 수정 ← 기술적 원인 포함
+```
+
+### Step 4: Structured markdown summary
+Output the work summary in the following format:
 
 ```markdown
-## {타입}: {작업 제목}
+## {Type}: {Work title}
 
 ### 문제 (버그 수정인 경우)
-{발생한 문제 설명}
+{Description of the problem}
 
 ### 원인
-{근본 원인 분석}
+{Root cause analysis}
 
 ### 수정 / 변경 내용
-{구체적으로 무엇을 어떻게 바꿨는지}
+{What was changed and how}
 
 ### 변경 파일
-- `경로/파일명` — 변경 사유
+- `path/filename` — reason for change
 
 ### 참고
-{추가 컨텍스트, 주의사항, 관련 사항 등}
+{Additional context, caveats, related items}
 ```
 
-기능 추가나 리팩토링인 경우 "문제/원인" 섹션 대신 "배경/목적" 섹션으로 대체한다.
+For features or refactors, replace "문제/원인" sections with "배경/목적".

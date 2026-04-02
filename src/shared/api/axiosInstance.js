@@ -1,10 +1,13 @@
 import axios from "axios";
 import { reissueToken } from "./reissueToken";
 
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://godlifelog.com/api/v1"
+    : "http://localhost:9090/api/v1";
+
 const axiosInstance = axios.create({
-//  baseURL: "http://localhost:9090/api/v1", // Spring Boot 백엔드 API 주소 [개발환경]
-//  baseURL: "http://52.78.45.234/api/v1", // Spring Boot 백엔드 API 주소 [EC2]
-  baseURL: "https://godlifelog.com/api/v1", // HTTPS 통신용 주소
+  baseURL: BASE_URL,
 
   headers: {
     //"ngrok-skip-browser-warning": "true",
