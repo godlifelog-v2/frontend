@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   fetchMyLikeList,
   deleteLikes,
@@ -6,6 +6,15 @@ import {
   fetchTargetCategories,
 } from "../services/mypageService";
 import { useSearchHistory } from "./useSearchHistory";
+
+const INITIAL_FILTERS = {
+  page: 1,
+  size: 3,
+  target: null,
+  job: null,
+  order: "desc",
+  search: "",
+};
 
 export const useMyLikeList = () => {
   const [loading, setLoading] = useState(true);
@@ -18,14 +27,7 @@ export const useMyLikeList = () => {
   const [jobCategories, setJobCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
 
-  const [filters, setFilters] = useState({
-    page: 1,
-    size: 3,
-    target: null,
-    job: null,
-    order: "desc",
-    search: "",
-  });
+  const [filters, setFilters] = useState(INITIAL_FILTERS);
 
   const [searchInput, setSearchInput] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -50,7 +52,7 @@ export const useMyLikeList = () => {
     }
   };
 
-  const loadLikedRoutines = async (params = filters) => {
+  const loadLikedRoutines = useCallback(async (params = INITIAL_FILTERS) => {
     try {
       setLoading(true);
       const data = await fetchMyLikeList(params);
@@ -62,7 +64,7 @@ export const useMyLikeList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -72,7 +74,7 @@ export const useMyLikeList = () => {
       setError("로그인이 필요합니다.");
       setLoading(false);
     }
-  }, []);
+  }, [loadLikedRoutines]);
 
   const handleFilterChange = (newFilters) => {
     const updatedFilters = { ...filters, ...newFilters, page: 1 };

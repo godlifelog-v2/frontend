@@ -90,7 +90,7 @@ export const useMyProfile = (userData, setUserData) => {
       }
     };
     loadJobCategories();
-  }, [userData.userJob]);
+  }, [userData.userJob, setUserData]);
 
   useEffect(() => {
     const loadTargetCategories = async () => {
@@ -118,7 +118,7 @@ export const useMyProfile = (userData, setUserData) => {
       }
     };
     loadTargetCategories();
-  }, [userData.targetIdx]);
+  }, [userData.targetIdx, setUserData]);
 
   const handleEditEmail = () => {
     setTempEmail(userData.userEmail);
