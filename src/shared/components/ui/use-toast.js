@@ -2,6 +2,8 @@
 
 import {
   useEffect,
+  useCallback,
+  useMemo,
   createContext,
   useContext,
   useReducer,
@@ -58,7 +60,7 @@ const ToastContext = createContext({
 export function ToastProvider({ children }) {
   const [toasts, dispatch] = useReducer(toastReducer, []);
 
-  const toast = (props) => {
+  const toast = useCallback((props) => {
     const id = props.id || genId();
     const newToast = {
       id,
@@ -73,9 +75,9 @@ export function ToastProvider({ children }) {
     dispatch({ type: ToastActionType.ADD_TOAST, toast: newToast });
 
     return id;
-  };
+  }, [dispatch]);
 
-  const dismiss = (toastId) => {
+  const dismiss = useCallback((toastId) => {
     dispatch({ type: ToastActionType.DISMISS_TOAST, toastId });
 
     // 기존 자동 제거 타이머를 취소하고 애니메이션 종료 후 즉시 제거
@@ -87,7 +89,7 @@ export function ToastProvider({ children }) {
       dispatch({ type: ToastActionType.REMOVE_TOAST, toastId });
     }, 300);
     toastTimeouts.set(toastId, timeout);
-  };
+  }, [dispatch]);
 
   const addToRemoveQueue = (toastId) => {
     if (toastTimeouts.has(toastId)) {
@@ -113,8 +115,13 @@ export function ToastProvider({ children }) {
     });
   }, [toasts]);
 
+  const contextValue = useMemo(
+    () => ({ toasts, toast, dismiss }),
+    [toasts, toast, dismiss]
+  );
+
   return (
-    <ToastContext.Provider value={{ toasts, toast, dismiss }}>
+    <ToastContext.Provider value={contextValue}>
       {children}
     </ToastContext.Provider>
   );

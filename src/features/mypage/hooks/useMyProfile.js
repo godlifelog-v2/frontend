@@ -11,6 +11,15 @@ import {
   verifyEmailCode,
 } from "../services/mypageService";
 
+const maskEmail = (email) => {
+  const atIndex = email.indexOf("@");
+  if (atIndex < 0) return email;
+  const local = email.slice(0, atIndex);
+  const domain = email.slice(atIndex);
+  const visibleLen = Math.min(2, local.length);
+  return local.slice(0, visibleLen) + "*".repeat(local.length - visibleLen) + domain;
+};
+
 const getGenderCode = (genderText) => {
   switch (genderText) {
     case "남성":
@@ -200,7 +209,7 @@ export const useMyProfile = (userData, setUserData) => {
     }
     try {
       await updateEmail(tempEmail);
-      setUserData({ ...userData, userEmail: tempEmail });
+      setUserData({ ...userData, userEmail: maskEmail(tempEmail) });
       setEditingEmail(false);
       setEmailVerificationSent(false);
       setEmailVerified(false);
