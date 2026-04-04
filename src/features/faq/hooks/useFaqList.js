@@ -1,13 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useToast } from "@/shared/components/ui/use-toast";
 import { useCategories } from "@/shared/hooks/categories/useCategories";
-import { useFaqService } from "../services/faqService";
+import { getFaqList, getFaqDetail, deleteFaq } from "../services/faqService";
 
 const PER_PAGE = 4;
 
 export const useFaqList = () => {
   const { toast } = useToast();
-  const { getFaqList, getFaqDetail, deleteFaq } = useFaqService();
   const { categories: rawCategories, loading: categoryLoading } = useCategories("faq");
 
   const [faqData, setFaqData] = useState([]);
@@ -44,7 +43,7 @@ export const useFaqList = () => {
     } finally {
       setLoading(false);
     }
-  }, [getFaqList]);
+  }, []);
 
   useEffect(() => {
     fetchFaqList();
@@ -66,7 +65,7 @@ export const useFaqList = () => {
     } finally {
       setDetailLoading(false);
     }
-  }, [openId, faqDetails, getFaqDetail]);
+  }, [openId, faqDetails]);
 
   const handleCategoryChange = useCallback((key) => {
     setCategory(key);
@@ -92,19 +91,23 @@ export const useFaqList = () => {
         description: "FAQ 삭제에 실패했습니다. 다시 시도해주세요.",
       });
     }
-  }, [deleteFaq, openId, toast]);
+  }, [openId, toast]);
 
   const filtered = useMemo(() => {
     if (!Array.isArray(faqData)) return [];
+    const selectedLabel =
+      category === "all"
+        ? null
+        : categories.find((c) => c.key === category)?.label;
     return faqData.filter((item) => {
       const matchesCategory =
-        category === "all" || item.faqCategoryIdx?.toString() === category;
+        category === "all" || item.faqCategoryName === selectedLabel;
       const matchesSearch = item.faqTitle
         ?.toLowerCase()
         .includes(search.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [faqData, category, search]);
+  }, [faqData, category, search, categories]);
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paginated = useMemo(

@@ -5,12 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/shared/components/ui/use-toast";
 import { useCategories } from "@/shared/hooks/categories/useCategories";
 import { faqSchema } from "../schemas/faqSchema";
-import { useFaqService } from "../services/faqService";
+import { getFaqDetail, createFaq, updateFaq } from "../services/faqService";
 
 export const useFaqEdit = (faqIdx) => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { getFaqDetail, createFaq, updateFaq } = useFaqService();
   const { categories: rawCategories, loading: categoryLoading } = useCategories("faq");
 
   const [isLoading, setIsLoading] = useState(!!faqIdx);
@@ -50,7 +49,8 @@ export const useFaqEdit = (faqIdx) => {
       }
     };
     loadFaq();
-  }, [faqIdx, getFaqDetail, form, toast, navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [faqIdx]);
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
