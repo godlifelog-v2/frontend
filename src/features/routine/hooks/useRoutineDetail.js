@@ -30,21 +30,15 @@ export const useRoutineDetail = (planIdx, navigate) => {
 
     try {
       const token = localStorage.getItem("accessToken");
-      const userInfoString = localStorage.getItem("userInfo");
 
       const data = await getRoutineDetail(planIdx);
       const routine = data.message;
 
-      // 비공개 루틴 권한 체크
-      if (!routine.isShared) {
-        const userInfo = userInfoString ? JSON.parse(userInfoString) : null;
-        const currentUserIdx = userInfo ? userInfo.userIdx : null;
-
-        if (parseInt(currentUserIdx) !== routine.userIdx) {
-          setIsPrivateMessage(true);
-          setIsLoading(false);
-          return;
-        }
+      // 비공개 루틴 권한 체크 - 작성자(isWriter === 1)만 열람 가능
+      if (!routine.isShared && routine.isWriter !== 1) {
+        setIsPrivateMessage(true);
+        setIsLoading(false);
+        return;
       }
 
       // 추천 상태 조회
